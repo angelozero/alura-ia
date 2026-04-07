@@ -6,6 +6,7 @@ requires-python = ">=3.14"
 members = [
     "praticando-python-conjuntos-e-dicionarios",
     "praticando-python-funcoes",
+    "praticando-python-strings-e-regex",
     "python",
 ]
 
@@ -18,6 +19,11 @@ source = { virtual = "praticando python - conjuntos e dicionarios" }
 name = "praticando-python-funcoes"
 version = "0.1.0"
 source = { virtual = "praticando python - funcoes" }
+
+[[package]]
+name = "praticando-python-strings-e-regex"
+version = "0.1.0"
+source = { virtual = "praticando python - strings e regex" }
 
 [[package]]
 name = "python"

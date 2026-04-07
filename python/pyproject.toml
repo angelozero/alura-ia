@@ -8,4 +8,5 @@ dependencies = []
 members = [
     "praticando python - funcoes",
     "praticando python - conjuntos e dicionarios",
+    "praticando python - strings e regex",
 ]
