@@ -1,99 +1,133 @@
-"""
-Módulo de exemplo de boas práticas PEP 8 e Tipagem Estática.
-Este arquivo demonstra a implementação de um sistema de processamento de dados.
-"""
-
-import logging
-from typing import List, Dict, Optional, Union, Final
-from abc import ABC, abstractmethod
-
-# Constantes em UPPER_CASE (PEP 8)
-TIMEOUT_LIMIT: Final = 30
+from pydantic import BaseModel
+from typing import List
+from fastapi import FastAPI
+from fastapi import APIRouter, HTTPException
 
 
-class BaseProcessor(ABC):
-    """Classe Abstrata seguindo o princípio da responsabilidade única."""
-
-    def __init__(self, name: str):
-        self.name = name
-
-    @abstractmethod
-    def process(self, data: Union[str, Dict]) -> bool:
-        """Assinatura de método obrigatória para subclasses."""
-        pass
 
 
-class DataValidator:
-    """Helper class para validação de esquemas."""
-
-    @staticmethod
-    def is_valid(payload: Dict) -> bool:
-        # Métodos estáticos não precisam de 'self'
-        return "id" in payload
+# Modelo base para produto
+class ProdutoBase(BaseModel):
+    nome: str
+    categoria: str
+    tags: List[str]
 
 
-class DocumentProcessor(BaseProcessor):
-    """
-    Implementação concreta de um processador de documentos.
-    Demonstra o uso de Type Hinting e tratamento de exceções.
-    """
+# Modelo para criar um produto
+class CriarProduto(ProdutoBase):
+    pass
 
-    def __init__(self, name: str, version: float = 1.0):
-        super().__init__(name)
-        self.version = version
-        self._internal_cache: List[Dict] = []  # Atributo "protegido"
-
-    def process(self, data: Union[str, Dict]) -> bool:
-        """
-        Processa os dados recebidos. 
-        Note o uso de Union para múltiplos tipos de entrada.
-        """
-        if isinstance(data, dict):
-            if DataValidator.is_valid(data):
-                self._internal_cache.append(data)
-                return True
-        return False
-
-    def get_first_entry(self) -> Optional[Dict]:
-        """Retorna o primeiro item ou None se a lista estiver vazia."""
-        try:
-            return self._internal_cache[0]
-        except IndexError:
-            logging.warning(f"Processador {self.name} está vazio.")
-            return None
+# Modelo de produto com ID
+class Produto(ProdutoBase):
+    id: int
 
 
-def run_pipeline(processors: List[BaseProcessor], raw_data: List[Dict]) -> int:
-    """
-    Função principal que demonstra iteração e tipagem de listas.
-    Sempre use 4 espaços para indentação (PEP 8).
-    """
-    success_count = 0
+# Modelo para histórico de compras do usuário
+class HistoricoCompras(BaseModel):
+    produtos_ids: List[int]
+
+
+# Modelo para preferências do usuário
+class Preferencias(BaseModel):
+    categorias: List[str] | None = None
+    tags: List[str] | None = None
+
+
+# Modelo base para um usuário
+class Usuario(BaseModel):
+    id: int
+    nome: str
+
+
+Produtos                 =[]
+ContadorProduto          =1
+
+
+Usuarios                 =[]
+
+ContadorUsuario          =1
+
+
+ConstanteMensagemHome    ="Bem-vindo à API de Recomendação de Produtos"
+
+# Histórico de compras em memória
+HistoricoDeCompras         ={}
+
+# Criando o App
+app = FastAPI()
+
+# Iniciando o servidor
+
+@app.get("/")
+def home():
+   
+    return {"mensagem": ConstanteMensagemHome}
+
+
+# Rota para cadastrar produtos
+
+@app.post("/produtos/", response_model=Produto)
+def criarproduto(produto: CriarProduto):
+    global ContadorProduto
+    NovoProduto = Produto(id=ContadorProduto, **produto.model_dump())
+    Produtos.append(NovoProduto)
+    ContadorProduto += 1
+    return NovoProduto
+
+
+# Rota para listar todos os produtos
+
+@app.get("/produtos/", response_model=List[Produto])
+def listarprodutos():
+    return Produtos
+
+# Rota para simular a criação do histórico de compras de um usuário
+
+@app.post("/historico_compras/{usuario_id}")
+def adicionarhistoricocompras(usuario_id: int, compras: HistoricoCompras):
+    if usuario_id not in [usuario.id for usuario in Usuarios]:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    HistoricoDeCompras[usuario_id] = compras.produtos_ids
+    return {"mensagem": "Histórico de compras atualizado"}
+
+# Rota para recomendações de produtos
+
+@app.post("/recomendacoes/{usuario_id}", response_model=List[Produto])
+def recomendarprodutos(usuario_id: int, preferencias: Preferencias):
+    if usuario_id not in HistoricoDeCompras:
+        raise HTTPException(status_code=404, detail="Histórico de compras não encontrado")
+
+    produtos_recomendados = []
+
+    # Buscar produtos com base no histórico de compras do usuário
+
+    produtos_recomendados = [produto for produto_id in HistoricoDeCompras[usuario_id] for produto in Produtos if produto.id == produto_id]
+
+    # Filtrar as recomendações com base nas preferências
+    produtos_recomendados = [p for p in produtos_recomendados if p.categoria in preferencias.categorias] # Preferencias de categorias
+    produtos_recomendados = [p for p in produtos_recomendados if any(tag in preferencias.tags for tag in p.tags)] # Preferencias de tags
+
+    return produtos_recomendados
+
+# Rota para cadastrar usuários
+
+@app.post("/usuarios/", response_model=Usuario)
+def criarusuario(nome: str):
+    global ContadorUsuario
+    NovoUsuario = Usuario(id=ContadorUsuario, nome=nome)
+    Usuarios.append(NovoUsuario)
+    ContadorUsuario += 1
+    return NovoUsuario
+
+# Rota para listar usuários
+
+@app.get("/usuarios/", response_model=List[Usuario])
+def listarusuarios():
+    return Usuarios
+
+def main():
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
     
-    for processor in processors:
-        for item in raw_data:
-            if processor.process(item):
-                success_count += 1
-                
-    return success_count
-
-
 if __name__ == "__main__":
-    # Configuração básica de logging
-    logging.basicConfig(level=logging.INFO)
-
-    # Dados de exemplo
-    data_stream = [
-        {"id": 1, "content": "RAG pipeline setup"},
-        {"user": "unknown"},  # Inválido (sem ID)
-        {"id": 2, "content": "LLM orchestration"}
-    ]
-
-    # Instanciando objetos
-    doc_proc = DocumentProcessor(name="MainProcessor")
-    
-    # Execução
-    total = run_pipeline(processors=[doc_proc], raw_data=data_stream)
-    
-    print(f"Processamento concluído. Itens válidos: {total}")
-    print(f"Primeiro registro: {doc_proc.get_first_entry()}")
+    main()
