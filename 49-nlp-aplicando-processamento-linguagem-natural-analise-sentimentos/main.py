@@ -356,3 +356,23 @@ def preprocess_and_classify(avaliation):
     
     return ' '.join(processed_phrase)
     
+# %%
+# 27. Testando o modelo com uma nova avaliação
+# Novas avaliações para prever
+new_evaluations = ["Ótimo produto, super recomendo!",
+                    "A entrega atrasou muito! Estou decepcionado com a compra",
+                    "Muito satisfeito com a compra. Além de ter atendido as expectativas, o preço foi ótimo",
+                    "Horrível!!! O produto chegou danificado e agora estou tentando fazer a devolução.",
+                    '''Rastreando o pacote, achei que não fosse recebê-lo, pois, na data prevista, estava sendo entregue em outra cidade.
+                    Mas, no fim, deu tudo certo e recebi o produto. Produto de ótima qualidade, atendendo bem as minhas necessidades e por um preço super em conta. Recomendo.''']
+
+new_evaluations_processed = [preprocess_and_classify(evaluation) for evaluation in new_evaluations]
+new_evaluations_vectorized = vectorizer_generated.transform(new_evaluations_processed)
+predictions = model_generated.predict(new_evaluations_vectorized)
+
+df_predictions = pd.DataFrame({
+    'Avaliação ': new_evaluations,
+    ' Sentimento': predictions
+})
+print(df_predictions)
+# %%
