@@ -7,7 +7,9 @@ import pandas as pd
 import seaborn as sns
 import unidecode
 import matplotlib.pyplot as plt
+import joblib
 import nltk
+from nltk import ngrams
 
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
@@ -281,3 +283,76 @@ print(f"Acurácia do modelo (TF-IDF): {accuracy_final * 100:.2f}%")
 
 
 # %%
+# 22. Capturando contextos e expressões idiomáticas com n-grams (combinações de palavras)
+tfidf_features = TfidfVectorizer(lowercase=False, max_features=1000, ngram_range=(1, 2))
+tfidf_features_vector = tfidf_features.fit_transform(df['tratamento_5'])
+X_train, X_test, y_train, y_test = train_test_split(
+    tfidf_features_vector,
+    df['sentimento'],
+    random_state=4978
+)
+model_ngrams = LogisticRegression()
+model_ngrams.fit(X_train, y_train)
+accuracy_ngrams = model_ngrams.score(X_test, y_test)
+print(f"Acurácia do modelo (TF-IDF + n-grams): {accuracy_ngrams * 100:.2f}%")
+
+# %%
+# 23. Obtendo os pesos dos sentimentos negativos e positvos para as palavras mais importantes do modelo
+pesos = pd.DataFrame(
+    model_ngrams.coef_[0].T, 
+    index=tfidf_features.get_feature_names_out(), 
+    columns=['Peso']
+).sort_values(by='Peso', ascending=False)
+
+# %%
+# 23.1 Positivo
+print(pesos.head(50))
+
+# %%
+# 23.2 Negativo
+print(pesos.tail(50))
+
+# %%
+# 24. Salvando o modelo e vetorizador para uso futuro
+joblib.dump(model_ngrams, './pkl/modelo_sentimentos.pkl')
+joblib.dump(tfidf_features, './pkl/vetorizador_sentimentos.pkl')
+
+
+# %%
+# 25. Carregando os modelos salvo para classificar uma nova avaliação
+vectorizer_generated = joblib.load('./pkl/vetorizador_sentimentos.pkl')
+model_generated = joblib.load('./pkl/modelo_sentimentos.pkl')
+
+# %%
+# 26. Criando uma função para processar todas as etapas de pré-processamento e classificação de uma nova avaliação
+irrelevant_words = nltk.corpus.stopwords.words('portuguese')
+token_pontuation = tokenize.WordPunctTokenizer
+steamer = nltk.RSLPStemmer()
+def preprocess_and_classify(avaliation):
+    """
+    Processa o texto de entrada e classifica o sentimento usando o modelo treinado.
+
+    Parâmetros:
+        avaliation — string com a avaliação a ser classificada
+
+    Retorna:
+        string com a classificação do sentimento ('positivo' ou 'negativo')
+    """
+    # Pré-processamento
+    # Passo 1
+    tokens = token_pontuation().tokenize(avaliation)
+    
+    # Passo 2 - Removendo stop words
+    processed_phrase = [word for word in tokens if word.lower() not in irrelevant_words]
+    
+    # Passo 3 - Removendo pontuação e caracteres não-alfabéticos
+    processed_phrase = [w for w in processed_phrase if w.isalpha()]
+    
+    # Passo 4 - Removendo acentuacão
+    processed_phrase = [unidecode.unidecode(w) for w in processed_phrase]
+    
+    # Passo 5 - Recuperando o radical da palavra (stemming)
+    processed_phrase = [steamer.stem(w) for w in processed_phrase]
+    
+    return ' '.join(processed_phrase)
+    
