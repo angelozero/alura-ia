@@ -141,7 +141,6 @@ print("Media: ", resultado["media_duracao"])
 media_hipotese_base = 1570
 lampadas_natalinas["duracao"].mean()
 
-
 confianca = 0.95  # valor dado pelo cientista de dado
 desvio_padrao_populacional = 105 # processo da fabricacao previso
 tamanho_amostra = len(lampadas_natalinas["duracao"])
