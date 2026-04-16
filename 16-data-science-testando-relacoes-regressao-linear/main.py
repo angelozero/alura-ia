@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score
 from statsmodels.formula.api import ols
 
 # %%
@@ -60,6 +61,19 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 df_train = pd.DataFrame(X_train)
 df_train["preco_de_venda"] = y_train
 modelo_0 = ols("preco_de_venda ~ area_primeiro_andar", data=df_train).fit()
-print(modelo_0.summary())
+print(modelo_0.params)
+ 
+# %%
+modelo_0.rsquared
+modelo_0.resid.hist()
+plt.title("Distribuição dosResíduos do Modelo de Regressão Linear")
+plt.show()
 
+# %%
+y_pred = modelo_0.predict(X_test)
+r2 = r2_score(y_test, y_pred)
+print(f"R² do modelo: {r2:.4f}")
+
+# %%
+sns.pairplot(dados, x_vars=["area_primeiro_andar"], y_vars="preco_de_venda", height=5, aspect=1.5, kind="reg")
 # %%
