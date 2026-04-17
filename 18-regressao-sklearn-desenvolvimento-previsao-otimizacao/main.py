@@ -1,6 +1,8 @@
 # %% [markdown]
 # ### Estudo de Predição de Preços de Imóveis - RJ
 # Este notebook prepara dados de imóveis e treina um modelo de regressão.
+import sys
+!{sys.executable} -m pip install yellowbrick
 
 # %%
 import pandas as pd
@@ -10,6 +12,8 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import FunctionTransformer
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, mean_absolute_error
 
 # %%
@@ -159,3 +163,18 @@ print(f"MAE: {mae * 100:.2f}%")
 
 
 # %%
+# Desenvolvendo nosso modelo de arvore de decisão
+dtr = DecisionTreeRegressor(random_state=42)
+dtr.fit(X_treino, y_treino)
+
+DecisionTreeRegressor(max_depth=5, random_state=42)
+
+previsao_dtr = dtr.predict(X_teste)
+r2_dtr = r2_score(y_teste, previsao_dtr)
+mae_dtr = mean_absolute_error(y_teste, previsao_dtr)
+
+print(f"R² Decision Tree: {r2_dtr * 100:.2f}%")
+print(f"MAE Decision Tree: {mae_dtr * 100:.2f}%")
+
+# %%
+# Random Forest Regressor
