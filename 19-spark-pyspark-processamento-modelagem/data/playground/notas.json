@@ -1,0 +1,8 @@
+[
+  {"nome": "João", "nascimento": "20/05/1998", "nota": 10},
+  {"nome": "Ana", "nascimento": "19/05/2000", "nota": 9.5},
+  {"nome": "Maria", "nascimento": "01/04/1986", "nota": -1},
+  {"nome": "Fabiana", "nascimento": "20/05/1973", "nota": 6},
+  {"nome": "Jose", "nascimento": "16/08/2005", "nota": 9},
+  {"nome": "Vitor", "nascimento": "20/05/1996", "nota": 8}
+]

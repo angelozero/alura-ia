@@ -178,3 +178,13 @@ print(f"MAE Decision Tree: {mae_dtr * 100:.2f}%")
 
 # %%
 # Random Forest Regressor
+rf = RandomForestRegressor(random_state=42, max_depth=5, n_estimators=10)
+
+rf.fit(X_treino, y_treino)
+
+RandomForestRegressor(max_depth=5, n_estimators=10, random_state=42)
+
+previsao_rf = rf.predict(X_teste)
+
+
+# %%
