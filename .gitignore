@@ -490,3 +490,7 @@ mvnw
 mvnw.cmd
 
 .DS_Store
+*.csv
+.csv
+*/data/*
+*/data/*.csv
