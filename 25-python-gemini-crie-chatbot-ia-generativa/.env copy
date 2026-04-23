@@ -1,0 +1,4 @@
+OPENAI_API_KEY=api-key-angelo-1234
+MODEL_NAME="ai-angelo-zero"
+API_KEY="api-key-angelo-1234"
+BASE_URL="http://localhost:4000/v1"
