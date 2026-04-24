@@ -1,29 +1,46 @@
-from langchain_core.prompts import ChatPromptTemplate
 from factory import get_chat_model
+from langchain_core.messages import HumanMessage
+from my_helper import encode_image
 
-PROMPT_TEMPLATE = """
-Responda a pergunta baseada apenas no seguinte contexto:
-{context}
 
----
+def run_hello_world():
+    print("--- Iniciando comunicação com a IA ---")
 
-Responda a pergunta baseada apenas no seguinte contexto:
-{question}
-"""
+    try:
 
-def main():
+        # 1. Instancia o modelo usando a configuração do seu arquivo original
+        llm = get_chat_model()
 
-    prompt_template = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
-    prompt = prompt_template.format(context="", question="Ola, qual é a capital da França?")
+        # 2. Define a mensagem de teste
+        imagem = encode_image(
+            "26-python-gemini-orquestrando-llms-langchain/data/macaco.png"
+        )
+        pergunta = "Descreva a imagem sendo o mais simples possível."
 
-    
-    llm = get_chat_model()
-    response = llm.invoke(prompt)
+        messages = [
+            HumanMessage(
+                content=[
+                    {"type": "text", "text": pergunta},
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/png;base64,{imagem}"},
+                    },
+                ]
+            )
+        ]
 
-    
-    print(f"\nResposta:\n{response.content}\n\n")
+        # 3. Chama a IA
+        print("Enviando mensagem para a IA... ")
+        response = llm.invoke(messages)
+
+        # 4. Exibe o resultado
+        print("--- Resposta da IA ---")
+        print(response.content)
+        print("-----------------------")
+
+    except Exception as e:
+        print(f"Erro ao conectar com o LiteLLM: {e}")
 
 
 if __name__ == "__main__":
-    main()
-    
+    run_hello_world()

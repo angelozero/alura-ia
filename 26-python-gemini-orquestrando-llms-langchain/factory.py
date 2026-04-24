@@ -15,14 +15,13 @@ BASE_URL = os.getenv("BASE_URL")
 
 def get_chat_model():
     """
-    Initializes and returns the Chat Model (LLM) instance.
-    Uses LiteLLM proxy via OpenAI-compatible interface.
+    Configuração baseada na imagem do VSCode/LiteLLM.
     """
     return init_chat_model(
-        model=MODEL_NAME,
-        model_provider="openai",
-        api_key=API_KEY,
-        base_url=BASE_URL,
+        model=MODEL_NAME,            # "gemini-2.0-flash"
+        model_provider="openai",     # O Proxy do LiteLLM usa o padrão OpenAI
+        api_key=API_KEY,             # Sua chave secreta
+        base_url=BASE_URL,           # A URL do Flow CI&T
         temperature=0,
     )
 

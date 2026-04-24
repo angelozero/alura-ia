@@ -10,7 +10,9 @@ dependencies = [
     { name = "dotenv" },
     { name = "langchain" },
     { name = "langchain-openai" },
+    { name = "langchain-prompty" },
     { name = "openai" },
+    { name = "python-dotenv" },
 ]
 
 [package.metadata]
@@ -18,7 +20,9 @@ requires-dist = [
     { name = "dotenv", specifier = ">=0.9.9" },
     { name = "langchain", specifier = ">=1.2.15" },
     { name = "langchain-openai", specifier = ">=1.2.0" },
+    { name = "langchain-prompty", specifier = ">=1.0.0" },
     { name = "openai", specifier = ">=2.32.0" },
+    { name = "python-dotenv", specifier = ">=1.2.2" },
 ]
 
 [[package]]
@@ -268,6 +272,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/dc/69/0ea9dabd903f750315ab31b8b85dad64f2927e56ddc26252dfe4e4ac2c40/langchain_openai-1.2.0.tar.gz", hash = "sha256:e88edf16002b9ed8e206161181c8a6fb2b3662da23195e0a844d040c3f93ab10", size = 1136352, upload-time = "2026-04-23T00:43:35.31Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/2c/7b/e8c3beeab0ca042529533072ebee69c66327c1805b3133531b58c422baab/langchain_openai-1.2.0-py3-none-any.whl", hash = "sha256:b3ed14dc48e40890605136f26c6b07e8f293987d95e734ab67cbfa572c523456", size = 98592, upload-time = "2026-04-23T00:43:34.135Z" },
+]
+
+[[package]]
+name = "langchain-prompty"
+version = "1.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "langchain-core" },
+    { name = "pyyaml" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/56/9c/8c7b2387b1d80586289e930f20868b44176329a47c66e797808cbefdcbfd/langchain_prompty-1.0.0.tar.gz", hash = "sha256:439c50ae99305d593ecdd2971902cf665f5a1d59a20fc5053c7c75f368096cba", size = 137235, upload-time = "2025-10-17T18:15:57.125Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/7c/d4/3e56cea1f66c5fa3a96bb172f5b543d9ac139cd58da3676fbb270c79b098/langchain_prompty-1.0.0-py3-none-any.whl", hash = "sha256:df7be67d300d50b74743f3ae68867ed1fe5366a0d65537b72f5eed9780cbf640", size = 10825, upload-time = "2025-10-17T18:15:56.084Z" },
 ]
 
 [[package]]

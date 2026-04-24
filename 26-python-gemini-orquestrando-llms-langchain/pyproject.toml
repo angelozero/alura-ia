@@ -8,5 +8,7 @@ dependencies = [
     "dotenv>=0.9.9",
     "langchain>=1.2.15",
     "langchain-openai>=1.2.0",
+    "langchain-prompty>=1.0.0",
     "openai>=2.32.0",
+    "python-dotenv>=1.2.2",
 ]
