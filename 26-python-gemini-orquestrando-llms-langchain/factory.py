@@ -13,12 +13,12 @@ API_KEY = os.getenv("API_KEY")
 BASE_URL = os.getenv("BASE_URL")
 
 
-def get_chat_model():
+def get_chat_model(model_name=MODEL_NAME):
     """
     Configuração baseada na imagem do VSCode/LiteLLM.
     """
     return init_chat_model(
-        model=MODEL_NAME,            # "gemini-2.0-flash"
+        model=model_name,            # "gemini-2.0-flash"
         model_provider="openai",     # O Proxy do LiteLLM usa o padrão OpenAI
         api_key=API_KEY,             # Sua chave secreta
         base_url=BASE_URL,           # A URL do Flow CI&T
