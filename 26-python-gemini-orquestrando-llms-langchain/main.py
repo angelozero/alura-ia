@@ -1,46 +1,29 @@
-from factory import get_chat_model
-from langchain_core.messages import HumanMessage
-from my_helper import encode_image
+from agent_orchestrator import AgentOrchestrator
 
+SEPARATOR = "=" * 60
 
-def run_hello_world():
-    print("--- Iniciando comunicação com a IA ---")
+def main():
+    print(f"\n{SEPARATOR}")
+    print("🚀 [MAIN] Iniciando aplicação de análise de imagens com LangChain")
+    print(SEPARATOR)
 
-    try:
+    print("\n📦 [MAIN] Criando AgentOrchestrator...")
+    orchestrator = AgentOrchestrator()
+    print("✅ [MAIN] AgentOrchestrator criado com sucesso")
 
-        # 1. Instancia o modelo usando a configuração do seu arquivo original
-        llm = get_chat_model()
+    query = "Faça uma análise da imagem macaco.png"
+    print(f"\n💬 [MAIN] Enviando query ao agente: '{query}'")
+    print(SEPARATOR)
 
-        # 2. Define a mensagem de teste
-        imagem = encode_image(
-            "26-python-gemini-orquestrando-llms-langchain/data/macaco.png"
-        )
-        pergunta = "Descreva a imagem sendo o mais simples possível."
+    response = orchestrator.agent.invoke({"messages": [{"role": "user", "content": query}]})
 
-        messages = [
-            HumanMessage(
-                content=[
-                    {"type": "text", "text": pergunta},
-                    {
-                        "type": "image_url",
-                        "image_url": {"url": f"data:image/png;base64,{imagem}"},
-                    },
-                ]
-            )
-        ]
-
-        # 3. Chama a IA
-        print("Enviando mensagem para a IA... ")
-        response = llm.invoke(messages)
-
-        # 4. Exibe o resultado
-        print("--- Resposta da IA ---")
-        print(response.content)
-        print("-----------------------")
-
-    except Exception as e:
-        print(f"Erro ao conectar com o LiteLLM: {e}")
-
+    print(f"\n{SEPARATOR}")
+    print("🏁 [MAIN] Execução concluída")
+    messages = response.get("messages", [])
+    final_message = messages[-1] if messages else None
+    if final_message:
+        print(f"📝 [MAIN] Resposta final do agente:\n{final_message.content}")
+    print(SEPARATOR)
 
 if __name__ == "__main__":
-    run_hello_world()
+    main()
