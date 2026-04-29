@@ -1,5 +1,10 @@
+# from factory_service import get_chat_model
+
 def main():
-    print("Hello from 27-langchain-python-criando-ferramentas-openai!")
+    # chat_model = get_chat_model()
+    # response = chat_model("What is the capital of France?")
+    # print(response)
+    print("Done!")
 
 
 if __name__ == "__main__":
