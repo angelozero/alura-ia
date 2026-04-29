@@ -39,7 +39,7 @@ def main():
         })
     )
 
-    response = chain_final.invoke({"country": "France"})
+    response = chain_final.invoke({"country": "Brazil"})
     
     print("\n")
     print(response)
