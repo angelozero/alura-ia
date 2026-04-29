@@ -1,7 +1,0 @@
-[project]
-name = "15-data-science-testando-hipoteses"
-version = "0.1.0"
-description = "Add your description here"
-readme = "README.md"
-requires-python = ">=3.14"
-dependencies = []
