@@ -10,6 +10,7 @@ dependencies = [
     "langchain-community>=0.4.1",
     "langchain-ollama>=1.1.0",
     "langchain-openai>=1.2.1",
+    "langchainhub>=0.1.21",
     "numpy>=2.4.4",
     "openai>=2.33.0",
     "pandas>=3.0.2",

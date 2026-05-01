@@ -1,33 +1,28 @@
+from langchain_classic.agents import (
+    AgentExecutor,
+    create_openai_functions_agent,
+)
+from langchain_classic import hub
+
 from factory_service import get_chat_model
-from langchain_core.prompts import PromptTemplate
-from langchain_core.output_parsers import JsonOutputParser
-from langchain.tools import BaseTool
-from estudante import Estudante
-from factory_service import get_chat_model
+
+from dado_estudante_tool import DadosEstudanteTool
 
 
-class DadosEstudante(BaseTool):
-    name: str = "DadosEstudante"
-    description: str = """Ferramenta de extração de informação"""
+def main():
+    dados_estudante_tool = DadosEstudanteTool()
+    
+    tools = [dados_estudante_tool]
+    
+    llm = get_chat_model()
+    
+    prompt = hub.pull("hwchase17/openai-functions-agent")
+    
+    agente = create_openai_functions_agent(llm, tools, prompt)
+    
+    agent_executor = AgentExecutor(agent=agente, tools=tools, verbose=True)
+    
+    agent_executor.invoke({"input": "Quem é o Angelo?"})
 
-    def _run(self, input: str) -> str:
-        llm = get_chat_model()
-
-        parser = JsonOutputParser(pydantic_object=Estudante)
-
-        template = PromptTemplate(
-            template="""
-            Você deve análisar a {input} e extrair o nome de usuario informado.
-            Formato de saída:
-            {formato_saida}
-            """,
-            input_variables=["input"],
-            partial_variables={"formato_saida": parser.get_format_instructions()},
-        )
-
-        cadeia = template | llm | parser
-
-        return cadeia.invoke({"input": input})
-
-
-print(DadosEstudante().run("Quais os dados do Angelo?"))
+if __name__ == "__main__":
+    main()
