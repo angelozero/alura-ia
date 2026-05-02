@@ -1,0 +1,21 @@
+          +-------------------------------------------+
+          |                  MLflow                   |
+          +-------------------------------------------+
+             /           /               \           \
+    ________/      _____/                 \_____      \________
+   /              /                             \              \
+  v              v                               v              v
++------------+  +-----------------+  +-----------------+  +-----------------+
+|  MLflow    |  |     MLflow      |  |     MLflow      |  |     MLflow      |
+|  Tracking  |  |    Projects     |  |     Models      |  |    Registry     |
++------------+  +-----------------+  +-----------------+  +-----------------+
+      |                 |                    |                    |
+      v                 v                    v                    v
++------------+  +-----------------+  +-----------------+  +-----------------+
+| Record and |  | Package data    |  | Deploy machine  |  | Store,          |
+| query      |  | science code    |  | learning models |  | annotate,       |
+| experiments|  | in a format to  |  | in diverse      |  | discover and    |
+| : code,    |  | reproduce runs  |  | serving         |  | manage models   |
+| data and   |  | on any          |  | environments    |  | in a central    |
+| results.   |  | platform        |  |                 |  | repository      |
++------------+  +-----------------+  +-----------------+  +-----------------+

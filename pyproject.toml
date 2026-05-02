@@ -17,3 +17,8 @@ dependencies = [
     "pypdf>=6.10.2",
     "python-dotenv>=1.2.2",
 ]
+
+[tool.uv.workspace]
+members = [
+    "42-mlflow-gerenciamento-experimentos-integracao-ia-generativa",
+]
