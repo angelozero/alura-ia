@@ -1,30 +1,29 @@
-from factory_service import get_chat_model
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 from langchain.tools import BaseTool
-from estudante import Estudante
-from factory_service import get_chat_model
+from pydantic import BaseModel, Field
+import json
+import pandas as pd
 
-
+class Estudante(BaseModel):
+    nome: str = Field("Nome do estudante")
+    
 class DadosEstudanteTool(BaseTool):
     name: str = "dado_estudante"
-    description: str = """Ferramenta de extração de informação"""
+    description: str = """
+        Ferramenta de extração de informação
+        Esta ferramenta deve receber apenas o nome do estudante como entrada
+    """
 
     def _run(self, input: str) -> str:
-        llm = get_chat_model()
+        estudante = input
+        estudante = estudante.lower()
+        dados = busca_dados_de_estudante(estudante)
+        return json.dumps(dados)
 
-        parser = JsonOutputParser(pydantic_object=Estudante)
-
-        template = PromptTemplate(
-            template="""
-            Você deve análisar a {input} e extrair o nome de usuario informado.
-            Formato de saída:
-            {formato_saida}
-            """,
-            input_variables=["input"],
-            partial_variables={"formato_saida": parser.get_format_instructions()},
-        )
-
-        cadeia = template | llm | parser
-
-        return cadeia.invoke({"input": input})
+def busca_dados_de_estudante(estudante):
+    dados = pd.read_csv("28-langchain-desenvolva-agentes-inteligencia-artificial/data/estudantes.csv")
+    dados_com_esse_estudante = dados[dados["USUARIO"] == estudante]
+    if dados_com_esse_estudante.empty:
+        return {}
+    return dados_com_esse_estudante.iloc[:1].to_dict()
