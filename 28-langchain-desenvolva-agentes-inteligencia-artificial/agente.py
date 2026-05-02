@@ -7,10 +7,11 @@ from langchain_classic import hub
 from factory_service import get_chat_model
 from dado_estudante_tool import DadosEstudanteTool
 from perfil_academico_tool import PerfilAcademicoTool
+from dado_universidade_tool import DadosUniversidadeTool, DadosTodasUniversidadeTool
 
 def execute_agent(query: str):
     llm = get_chat_model()
-    tools = [DadosEstudanteTool(), PerfilAcademicoTool()]
+    tools = [DadosEstudanteTool(), PerfilAcademicoTool(), DadosUniversidadeTool(), DadosTodasUniversidadeTool()]
     
     # openai functions
     # prompt = hub.pull("hwchase17/openai-functions-agent")

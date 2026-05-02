@@ -48,6 +48,7 @@ class PerfilAcademicoTool(BaseTool):
                                   """,
             input_variables=["dados_do_estudante"],
             partial_variables={"formato_de_saida": parser.get_format_instructions()},
+            return_direct=False
         )
         llm = get_chat_model()
         cadeia = template | llm | parser
