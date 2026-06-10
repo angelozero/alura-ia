@@ -1,0 +1,1 @@
+![alt text](perguntas_ia-1.png)
